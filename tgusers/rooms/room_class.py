@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-
+from random import randint
 
 """
 Room content type can be in range of ['audio', 'photo', 'voice', 'video', 'document', 'text', 'location', 'contact', 'sticker']
@@ -12,7 +12,7 @@ class Room:
     content_type: list
     roles: list
     function: any
-
+    is_global: bool
 
 class RoomsAlerts:
     @staticmethod
@@ -25,15 +25,21 @@ class Rooms:
         self.rooms = {}
         self.tables = tables
 
-    def add_room(self, name, content_type: list = None, roles: list = None):
+    def add_room(self, name: str = None, content_type: list = None, roles: list = None, is_global: bool = False):
         if roles is None:
             roles = ["all"]
         if content_type is None:
             content_type = []
+        if name is None:
+            name = str(randint(100000, 999999))
 
         def append_to_rooms(room_func):
-            room = Room(name=name, content_type=content_type, roles=roles, function=room_func)
-            self.rooms[name] = room
+            if is_global:
+                room = Room(name=None, content_type=content_type, roles=roles, function=room_func, is_global=True)
+                self.rooms[name] = room
+            else:
+                room = Room(name=name, content_type=content_type, roles=roles, function=room_func, is_global=False)
+                self.rooms[name] = room
 
         return append_to_rooms
 

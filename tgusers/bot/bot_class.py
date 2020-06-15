@@ -32,9 +32,8 @@ class TelegramBot:
                 print(message.chat.username, ":", message.chat.id, " -> ", message.text, "[", message.content_type, "]")
             for room_name in self.rooms.rooms:
                 room = self.rooms.rooms[room_name]
-                if message.content_type in room.content_type and room.name == user.room:
-                    await room.function(message, self.tables)
-                    break
+                if message.content_type in room.content_type and (room.name == user.room or room.is_global):
+                    await room.function(message)
 
     def polling(self):
         executor.start_polling(self.disp, skip_updates=False)

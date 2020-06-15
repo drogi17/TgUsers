@@ -53,4 +53,9 @@ async def say_hi(message: types.Message):
     await connect.telegram_bot.bot.send_message(message.chat.id, "hi")
 
 
+@rooms.add_room(content_type=["text"], roles=["admin"], is_global=True)
+async def global_hi(message: types.Message):
+    await connect.telegram_bot.bot.send_message(message.chat.id, "hi from global")
+
+
 connect.telegram_bot.polling()
