@@ -1,5 +1,7 @@
 import telebot
 
+from aiogram import Bot, Dispatcher, executor, types
+
 from time import time
 from tgusers.tables.users import User
 from tgusers.tables.tables import Tables
@@ -9,16 +11,17 @@ from tgusers.tables.messages import Message
 
 class TelegramBot:
     def __init__(self, api_key: str, tables: Tables, rooms: Rooms, message_logging: bool):
-        self.bot = telebot.TeleBot(api_key, threaded=True)
+        self.bot = Bot(api_key)
+        self.disp = Dispatcher(self.bot)
         self.rooms = rooms
         self.tables = tables
 
-        @self.bot.message_handler(content_types=['audio', 'photo', 'voice', 'video', 'document', 'text', 'location', 'contact', 'sticker'])
-        def handler(message):
+        @self.disp.message_handler(content_types=['audio', 'photo', 'voice', 'video', 'document', 'text', 'location', 'contact', 'sticker'])
+        async def handler(message: types.Message):
             if not self.tables.users.check_user_for_registration(message):
                 user = User(telegram_id=message.chat.id, first_name=message.chat.first_name,
                             last_name=message.chat.last_name, user_name=message.chat.username,
-                            phone="", language=message.from_user.language_code, permissions="user",
+                            phone="", language=message.from_user.language_code, role="user",
                             room="start")
                 user.id = self.tables.users.add(user).get("id")
             else:
@@ -29,6 +32,9 @@ class TelegramBot:
                 print(message.chat.username, ":", message.chat.id, " -> ", message.text, "[", message.content_type, "]")
             for room_name in self.rooms.rooms:
                 room = self.rooms.rooms[room_name]
-                # print(room)
                 if message.content_type in room.content_type and room.name == user.room:
-                    room.function(message, self.tables)
+                    await room.function(message, self.tables)
+                    break
+
+    def polling(self):
+        executor.start_polling(self.disp, skip_updates=False)

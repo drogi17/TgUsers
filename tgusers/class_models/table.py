@@ -10,5 +10,5 @@ class Table:
         sql = """
                     SELECT *
                     FROM "%s";
-        """ % (self.table_name)
+        """ % (self.table_name, )
         return self.db.request(sql)

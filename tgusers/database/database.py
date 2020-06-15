@@ -1,4 +1,3 @@
-import os
 import psycopg2
 import psycopg2.extras
 
@@ -28,12 +27,15 @@ class DataBase:
         self.cursor = self.conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
     def request(self, sql_request, args: tuple = None):
-        if args:
-            self.cursor.execute(sql_request, args)
-            return make_dict_rows(self.cursor.fetchall())
-        else:
-            self.cursor.execute(sql_request)
-            return make_dict_rows(self.cursor.fetchall())
+        try:
+            if args:
+                self.cursor.execute(sql_request, args)
+                return make_dict_rows(self.cursor.fetchall())
+            else:
+                self.cursor.execute(sql_request)
+                return make_dict_rows(self.cursor.fetchall())
+        except psycopg2.ProgrammingError:
+            return None
 
     def commit(self):
         self.conn.commit()
