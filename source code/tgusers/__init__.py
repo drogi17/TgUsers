@@ -1,11 +1,11 @@
 from .database.database import PostgresAuthData
 from .database.database import DataBase
 from .class_models.table import Table
-from .connect import Connect
+from .rooms.room_class import Rooms
 
 __all__ = [
     "PostgresAuthData",
     "DataBase",
     "Table",
-    "Connect"
+    "Rooms",
 ]
