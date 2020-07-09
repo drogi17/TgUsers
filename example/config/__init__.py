@@ -1,11 +1,11 @@
 import os
 
-BOT_TOKEN = "TOKEN"
-DB_NAME = "postgres"
+BOT_TOKEN = "token"
+DB_NAME = "telegram_bot"
 DB_USER = "postgres"
 DB_PASSWORD = "postgres"
-DB_HOST = "127.0.0.1"
-DB_PORT = 5432
+DB_HOST = "0.0.0.0"
+DB_PORT = 5433
 
 
-ADMINS = ["ADMINS There"]
+ADMINS = ["chat_id"]

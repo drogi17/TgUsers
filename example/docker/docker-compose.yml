@@ -1,0 +1,16 @@
+version: "3"
+services: 
+    db:
+        image: postgres:10.13
+        container_name: telegram_bot
+        restart: always
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_HOST: postgres
+            POSTGRES_DB: telegram_bot
+        volumes:
+            - ./postgres-data.sql:/docker-entrypoint-initdb.d/init.sql
+        ports:
+            - "5433:5432"
+

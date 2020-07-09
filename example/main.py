@@ -1,3 +1,4 @@
+import message_rooms
 import tgusers
 import config
 
@@ -14,6 +15,10 @@ auth_data = PostgresAuthData(dbname=config.DB_NAME, user=config.DB_USER, passwor
                              host=config.DB_HOST, port=config.DB_PORT)
 
 rooms = tgusers.Rooms(pgData=auth_data, bot_token=config.BOT_TOKEN, message_logging=True, antispam=True)
+
+# upload rooms (alternative of import)
+rooms.upload_rooms(message_rooms.message_rooms)
+
 tables = rooms.tables
 
 # Add roles
@@ -23,7 +28,6 @@ rooms.add_role("admin", config.ADMINS)
 tables.tokens = Tokens("Tokens", rooms.db)
 
 # import rooms from file
-import message_rooms
 import callback_rooms
 
 
