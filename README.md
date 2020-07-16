@@ -4,8 +4,9 @@
 * [About the Project](#about-the-project)
 * [How to Install](#how-to-install)
 * [Quick Start](#quick-start)
-* [TgUsers](#TgUsers)
-    * [Rooms](#Rooms)
+* [TgUsers](#tgusers)
+    * [Rooms](#rooms)
+    * [RoomsContainer](#roomscontainer)
 
 ## About The Project
 ###### [ru]
@@ -62,7 +63,7 @@ is_global: bool = False # Does the user need to be in this room to interact with
 ```
 
 ## TgUsers
-* ###Rooms
+### * Rooms
     * About:
         The main class.
     * Arguments:
@@ -128,7 +129,7 @@ is_global: bool = False # Does the user need to be in this room to interact with
             * rooms_container: RoomsContainer
         * About:
             Load rooms from other files.
-* ###RoomsContainer
+### * RoomsContainer
     * About:
         Rooms to be connected to the main "Rooms" module.
     * Arguments:
