@@ -1,5 +1,3 @@
-# TgUsers
-
 ## Contents
 * [About the Project](#about-the-project)
 * [How to Install](#how-to-install)
@@ -63,102 +61,102 @@ is_global: bool = False # Does the user need to be in this room to interact with
 ```
 
 ## TgUsers
-### * Rooms
-    * About:
-        The main class.
-    * Arguments:
-        * bot_token: str
-        * pgData: PostgresAuthData
-        * message_logging: bool = False
-        * get_alerts: bool = False
-        * antispam: bool = False
-    * @Rooms.add_message_room
-        * Arguments:
-            * name: str
-            * content_type: list = None
-            * roles: list = None
-            * is_global: bool = False
-        * About:
-            Adding "message" rooms. Arguments to the function are passed through annotations.
-            Room names may be repeated.
-    * @Rooms.add_callback_room
-        * Arguments:
-            * name: str
-            * is_global: bool = False
-        * About:
-            Adding "message" rooms. Arguments to the function are passed through annotations.
-            Room names may be repeated.
-    * @Rooms.on_join_room
-        * Arguments:
-            * name: str
-        * About:
-            This function will be executed when the user switches to a new room.
-            Adding "message" rooms. Arguments to the function are passed through annotations.
-            Room names may be repeated.
-    * Rooms.add_role
-        * Arguments:
-            * role: str
-            * users: list # Telegram id's
-        * About:
-             Adding roles to users.
-    * Rooms.get_user_role
-        * Arguments:
-            * user_id: int
-        * About:
-            Get user role by telegram id.
-    * Rooms.user_go_to_room
-        * Arguments:
-            message: types.Message
-            room_name: str
-        * About:
-            Move the user to a room named "room_name".
-    * Rooms.go_to_one_of_the_rooms
-        * Arguments:
-            message: types.Message
-            rooms_dict: dict
-        * About:
-            Move the user to one of the rooms, depending on the message sent. Dict structure: 
-            ```python
-            go_rooms = {
-                "message_text": "rooma_name",
-                "/message_text": "rooma_name2",
-            }
-            ```
-    * Rooms.upload_rooms
-        * Arguments:
-            * rooms_container: RoomsContainer
-        * About:
-            Load rooms from other files.
-### * RoomsContainer
-    * About:
-        Rooms to be connected to the main "Rooms" module.
-    * Arguments:
-        No arguments
-    * @RoomsContainer.add_message_room
-        * Arguments:
-            * name: str
-            * content_type: list = None
-            * roles: list = None
-            * is_global: bool = False
-        * About:
-            Adding "message" rooms. Arguments to the function are passed through annotations.
-            Room names may be repeated.
-    * @RoomsContainer.add_callback_room
-        * Arguments:
-            * name: str
-            * is_global: bool = False
-        * About:
-            Adding "message" rooms. Arguments to the function are passed through annotations.
-            Room names may be repeated.
-    * @RoomsContainer.on_join_room
-        * Arguments:
-            * name: str
-        * About:
-            This function will be executed when the user switches to a new room.
-            Adding "message" rooms. Arguments to the function are passed through annotations.
-            Room names may be repeated.
-    * Rooms.upload_rooms
-        * Arguments:
-            * rooms_container: RoomsContainer
-        * About:
-            Load rooms from other files.
+### Rooms
+ * About: <br>
+     The main class.
+ * Arguments:
+     * bot_token: str
+     * pgData: PostgresAuthData
+     * message_logging: bool = False
+     * get_alerts: bool = False
+     * antispam: bool = False
+ * @Rooms.add_message_room
+     * Arguments:
+         * name: str
+         * content_type: list = None
+         * roles: list = None
+         * is_global: bool = False
+     * About:<br>
+         Adding "message" rooms. Arguments to the function are passed through annotations.
+         Room names may be repeated.
+ * @Rooms.add_callback_room
+     * Arguments:
+         * name: str
+         * is_global: bool = False
+     * About:<br>
+         Adding "message" rooms. Arguments to the function are passed through annotations.
+         Room names may be repeated.
+ * @Rooms.on_join_room
+     * Arguments:
+         * name: str
+     * About:<br>
+         This function will be executed when the user switches to a new room.
+         Adding "message" rooms. Arguments to the function are passed through annotations.
+         Room names may be repeated.
+ * Rooms.add_role
+     * Arguments:
+         * role: str
+         * users: list # Telegram id's
+     * About:<br>
+          Adding roles to users.
+ * Rooms.get_user_role
+     * Arguments:
+         * user_id: int
+     * About:<br>
+         Get user role by telegram id.
+ * Rooms.user_go_to_room
+     * Arguments:
+         message: types.Message
+         room_name: str
+     * About:<br>
+         Move the user to a room named "room_name".
+ * Rooms.go_to_one_of_the_rooms
+     * Arguments:
+         message: types.Message
+         rooms_dict: dict
+     * About:<br>
+         Move the user to one of the rooms, depending on the message sent. Dict structure: 
+         ```python
+         go_rooms = {
+             "message_text": "rooma_name",
+             "/message_text": "rooma_name2",
+         }
+         ```
+ * Rooms.upload_rooms
+     * Arguments:
+         * rooms_container: RoomsContainer
+     * About:<br>
+         Load rooms from other files.
+### RoomsContainer
+ * About:<br>
+     Rooms to be connected to the main "Rooms" module.
+ * Arguments:
+     No arguments
+ * @RoomsContainer.add_message_room
+     * Arguments:
+         * name: str
+         * content_type: list = None
+         * roles: list = None
+         * is_global: bool = False
+     * About:<br>
+         Adding "message" rooms. Arguments to the function are passed through annotations.
+         Room names may be repeated.
+ * @RoomsContainer.add_callback_room
+     * Arguments:
+         * name: str
+         * is_global: bool = False
+     * About:<br>
+         Adding "message" rooms. Arguments to the function are passed through annotations.
+         Room names may be repeated.
+ * @RoomsContainer.on_join_room
+     * Arguments:
+         * name: str
+     * About:<br>
+         This function will be executed when the user switches to a new room.
+         Adding "message" rooms. Arguments to the function are passed through annotations.
+         Room names may be repeated.
+ * Rooms.upload_rooms
+     * Arguments:
+         * rooms_container: RoomsContainer
+     * About:<br>
+         Load rooms from other files.
