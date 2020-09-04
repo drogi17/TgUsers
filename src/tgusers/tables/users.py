@@ -1,7 +1,7 @@
 import tgusers
 
 from dataclasses import dataclass
-
+from aiogram import types
 
 @dataclass
 class User:
@@ -42,6 +42,25 @@ class Users(tgusers.Table):
                     WHERE telegram_id = %s;
         """
         return self.db.request(sql, (message.chat.id,))[0].get("room")
+
+    def get_user_lang(self, message: types.Message = None, user_id: int = None):
+        if not user_id:
+            user_id = message.chat.id
+        sql = """
+                    SELECT language
+                    FROM "Users"
+                    WHERE telegram_id = %s;
+        """
+        return self.db.request(sql, (user_id,))[0].get("language")
+
+    def set_user_lang(self, language: str, message: types.Message = None, user_id: int = None):
+        if not user_id:
+            user_id = message.chat.id
+        sql = """   UPDATE "Users" 
+                    SET language = %s
+                    WHERE telegram_id = %s;"""
+        self.db.request(sql, (language, user_id,))
+        self.db.commit()
 
     def check_user_for_registration(self, message=None, telegram_id: int = None):
         if message:

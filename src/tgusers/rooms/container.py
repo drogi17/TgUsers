@@ -4,7 +4,7 @@ from random import randint
 from tgusers.dataclasses.rooms import Room
 from tgusers.utils.validator import valid_check
 from tgusers.errors.rooms import RoomsErrors
-
+from tgusers.utils.arguments_container import ArgumentsContainer, ArgumentsBox
 
 class RoomsContainer: ...
 
@@ -63,4 +63,16 @@ class RoomsContainer:
 
     def upload_rooms(self, rooms_container: RoomsContainer):
         self.rooms += rooms_container.rooms
+
+
+    def upload_external_arguments(self, arguments: ArgumentsContainer):
+        for room_arguments in arguments.arguments_list:
+            room_arguments: ArgumentsBox
+            room_name = room_arguments.room_name
+            arguments = room_arguments.arguments
+            for get_room_name in self.rooms:
+                if get_room_name.name == room_name:
+                    if not get_room_name.not_obligatory_arguments:
+                        get_room_name.not_obligatory_arguments = []
+                    get_room_name.not_obligatory_arguments += arguments
 

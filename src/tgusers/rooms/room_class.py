@@ -1,3 +1,4 @@
+from typing import List
 from aiogram import types
 from random import randint
 from .container import RoomsContainer
@@ -9,7 +10,7 @@ from tgusers.dataclasses.rooms import Room
 from tgusers.utils.validator import valid_check
 from tgusers.errors.rooms import RoomsErrors
 from tgusers.dataclasses.rooms import Arguments, Argument
-
+from tgusers.utils.arguments_container import ArgumentsContainer, ArgumentsBox
 
 """
 Room content type can be in range of ['audio', 'photo', 'voice', 'video', 'document', 'text', 'location', 'contact', 'sticker']
@@ -41,11 +42,11 @@ class RoomsAlerts:
 
 
 class Rooms:
+    rooms: List[Room]
     def __new__(cls, bot_token: str = None, pgData: PostgresAuthData = None, message_logging: bool = False,
                 get_alerts: bool = False, antispam: bool = False):
         if not hasattr(cls, 'instance'):
             cls.instance = super(Rooms, cls).__new__(cls)
-
             cls.rooms = []
             cls.get_alerts = get_alerts
             cls.db = DataBase(pgData)
@@ -103,8 +104,19 @@ class Rooms:
             self.tables._users.set_user_role(role, telegram_id=user)
         self.db.commit()
 
-    def get_user_role(self, user: int):
-        return self.tables._users.get_user_role(telegram_id=user)
+    def get_user_role(self, user_id: int):
+        return self.tables._users.get_user_role(telegram_id=user_id)
+
+    def get_user_lang(self, message: types.Message = None, user_id: int = None):
+        if message:
+            user_id = message.from_user.id
+        return self.tables._users.get_user_lang(user_id=user_id)
+
+    def set_user_lang(self, language: str, message: types.Message = None, user_id: int = None):
+        if message:
+            user_id = message.from_user.id
+        self.tables._users.set_user_lang(language, user_id=user_id)
+        return True
 
     def get_room_by_name(self, name) -> Room:
         for room in self.rooms:
@@ -118,12 +130,14 @@ class Rooms:
             names.append(room.name)
         return names
 
-    async def user_go_to_room(self, message, room_name: str):
+    async def user_go_to_room(self, room_name: str, message: types.Message = None, telegram_id: int = None, no_one_join: bool = False):
+        if message and not telegram_id:
+            telegram_id = message.from_user.id
         if not self.get_room_by_name(room_name):
             return
-        if self.tables._users.get_user_role(message) in self.get_room_by_name(room_name).roles or "all" in self.get_room_by_name(room_name).roles:
-            if self.tables._users.set_room(message, self.get_rooms_names(), room_name):
-                if self.get_room_by_name(room_name).on_join:
+        if self.tables._users.get_user_role(telegram_id=telegram_id) in self.get_room_by_name(room_name).roles or "all" in self.get_room_by_name(room_name).roles:
+            if self.tables._users.set_room(rooms=self.get_rooms_names(), room_name=room_name, telegram_id=telegram_id):
+                if self.get_room_by_name(room_name).on_join and not no_one_join:
                     o_args = [
                         Argument(value=message, annotation=types.Message)
                     ]
@@ -141,32 +155,26 @@ class Rooms:
     async def go_to_one_of_the_rooms(self, message, rooms_dict: dict):
         get_room = rooms_dict.get(message.text)
         if get_room:
-            return await self.user_go_to_room(message, get_room)
+            return await self.user_go_to_room(get_room, message)
         else:
             return False
-
-
-    # async def go_to_previous_room(self, message, rooms_dict: dict):
-    #     get_room = rooms_dict.get(message.text)
-    #     if get_room:
-    #         return await self.user_go_to_room(message, get_room)
-    #     else:
-    #         return False
-
-    # async def broadcast_do(self, message: str, mark_down: bool = False):
-    #     users = self.tables._users.get_users_ids()
-    #     user_count = 0
-    #     for user in users:
-    #         if user_count > 25: sleep(1)
-    #         await self.telegram_bot.bot.send_message(user.get("id"), message, mark_down=mark_down)
-
-    # async def broadcast(self, message: str, mark_down: bool = False):
-    #     await self.broadcast_do(message, mark_down)
-
 
     def show_rooms(self):
         print(self.rooms)
 
+    def __str__(self):
+        return str(self.rooms)
+
     def upload_rooms(self, rooms_container: RoomsContainer):
         self.rooms += rooms_container.rooms
 
+    def upload_external_arguments(self, arguments: ArgumentsContainer):
+        for room_arguments in arguments.arguments_list:
+            room_arguments: ArgumentsBox
+            room_name = room_arguments.room_name
+            arguments = room_arguments.arguments
+            for get_room_name in self.rooms:
+                if get_room_name.name == room_name:
+                    if not get_room_name.not_obligatory_arguments:
+                        get_room_name.not_obligatory_arguments = []
+                    get_room_name.not_obligatory_arguments += arguments

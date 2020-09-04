@@ -45,9 +45,12 @@ class TelegramBot:
                 n_o_args = [
                     Argument(value=tgusers.Rooms(), annotation=tgusers.Rooms)
                 ]
-                args = Arguments(obligatory=o_args, not_obligatory=n_o_args)
                 for room in self.rooms:
-                    if room.message_handler and message.content_type in room.content_type and (room.name == user.room or room.is_global):
+                    if room.message_handler and message.content_type in room.content_type and (
+                            room.name == user.room or room.is_global):
+                        if room.not_obligatory_arguments:
+                            n_o_args += room.not_obligatory_arguments
+                        args = Arguments(obligatory=o_args, not_obligatory=n_o_args)
                         await run_function_with_arguments_by_annotations(room.function, args)
             except aiogram.utils.exceptions.BotBlocked:
                 print(message.chat.id, "has blocked this bot")

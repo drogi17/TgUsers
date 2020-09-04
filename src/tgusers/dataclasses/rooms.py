@@ -12,6 +12,7 @@ class Room:
     content_type: list = None
     message_handler: bool = False
     callback_query_handler: bool = False
+    not_obligatory_arguments: list = None
 
 
 @dataclass

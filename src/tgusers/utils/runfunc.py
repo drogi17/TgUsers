@@ -4,6 +4,12 @@ import inspect
 from tgusers.dataclasses.rooms import Arguments
 
 
+async def run_func_as_async(function, **func_args):
+    if inspect.iscoroutinefunction(function):
+        return await function(**func_args)
+    else:
+        return function(**func_args)
+
 
 async def run_function_with_arguments_by_annotations(function, arguments: Arguments):
     params = list(inspect.signature(function).parameters.items())
@@ -22,7 +28,4 @@ async def run_function_with_arguments_by_annotations(function, arguments: Argume
             if arg.annotation == parameter.annotation:
                 func_args[parameter.name] = arg.value
         num_ += 1
-    if inspect.iscoroutinefunction(function):
-        return await function(**func_args)
-    else:
-        return function(**func_args)
+    await run_func_as_async(function, **func_args)
