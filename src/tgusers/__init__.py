@@ -12,3 +12,6 @@ __all__ = [
     "Rooms",
     "RoomsContainer"
 ]
+
+
+__version__ = 20
