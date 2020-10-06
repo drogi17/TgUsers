@@ -5,7 +5,8 @@ message_rooms = RoomsContainer()
 
 
 @message_rooms.add_message_room("start", content_type=["text"])
-async def start(message: types.Message, _rooms: Rooms):
+async def start(message: types.Message, _rooms: Rooms, a: int):
+    print(a)
     # command -> room
     go_rooms = {
         "/say_hi": "say_hi",
@@ -63,3 +64,4 @@ async def start(message: types.Message, _rooms: Rooms):
 @message_rooms.add_message_room(content_type=["text"], is_global=True)
 async def global_hi(message: types.Message):
     await message.answer("Hi from global")
+

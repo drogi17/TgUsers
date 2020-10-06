@@ -1,8 +1,8 @@
+import callback_rooms
 import message_rooms
 import tgusers
 import config
 
-from aiogram import types
 from tgusers import PostgresAuthData
 
 
@@ -18,18 +18,22 @@ rooms = tgusers.Rooms(pgData=auth_data, bot_token=config.BOT_TOKEN, message_logg
 
 # upload rooms (alternative of import)
 rooms.upload_rooms(message_rooms.message_rooms)
+rooms.upload_rooms(callback_rooms.rooms)
 
 tables = rooms.tables
+
+args = tgusers.ArgumentsContainer()
+args.add_arguments_to_room("start",
+                           {
+                               int: 10
+                           })
+
+rooms.upload_external_arguments(args)
 
 # Add roles
 rooms.add_role("admin", config.ADMINS)
 
 # Add table to tables
 tables.tokens = Tokens("Tokens", rooms.db)
-
-# import rooms from file
-import callback_rooms
-
-
 
 rooms.telegram_bot.polling()

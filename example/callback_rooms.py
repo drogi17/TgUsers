@@ -1,8 +1,8 @@
 from aiogram import types
-from tgusers import Rooms
+from tgusers import RoomsContainer
 
 
-rooms = Rooms()
+rooms = RoomsContainer()
 
 
 @rooms.add_callback_room("start")
